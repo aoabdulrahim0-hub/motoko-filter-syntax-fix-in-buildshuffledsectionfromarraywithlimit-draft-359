@@ -1,0 +1,58 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-27T01:27:38.948Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 4,
+    "implemented": 0,
+    "items": [
+      {
+        "id": "REQ-16",
+        "summary": "In backend/main.mo, fix the invalid filter syntax in the `buildShuffledSectionFromArray` function by replacing `Text.equal(e.primaryMuscleGroup.toLower(), group.toLower())` with `Text.equal(Text.toLowercase(e.primaryMuscleGroup), Text.toLowercase(group))`. This is the primary cause of empty exercise arrays and the 'Failed to generate workout' error.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-17",
+        "summary": "In backend/main.mo, fix the invalid filter syntax in the `buildShuffledSectionFromArrayWithLimit` function by replacing `Text.equal(e.primaryMuscleGroup.toLower(), group.toLower())` with `Text.equal(Text.toLowercase(e.primaryMuscleGroup), Text.toLowercase(group))`.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-18",
+        "summary": "In backend/main.mo, in the `adjustRecoveryForTestMode` function, change `let fullyRecoveredTime = 0;` to `let fullyRecoveredTime = 0 - (100 * 3_600_000_000_000);` so that TEST_RECOVERY_MODE forces 100% recovery for all muscle groups.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-19",
+        "summary": "In backend/main.mo, ensure all imports use `mo:base/*` instead of `mo:core/*` (e.g., `mo:base/Text`, `mo:base/Array`, `mo:base/Int`, etc.) to ensure compatibility with the IC production environment and prevent build failures.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

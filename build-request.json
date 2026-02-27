@@ -1,0 +1,97 @@
+{
+  "kind": "build_request",
+  "title": "Fix 'Failed to generate workout' — critical backend filter and recovery bugs",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-16",
+      "text": "In backend/main.mo, fix the invalid filter syntax in the `buildShuffledSectionFromArray` function by replacing `Text.equal(e.primaryMuscleGroup.toLower(), group.toLower())` with `Text.equal(Text.toLowercase(e.primaryMuscleGroup), Text.toLowercase(group))`. This is the primary cause of empty exercise arrays and the 'Failed to generate workout' error.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1",
+          "msg-6"
+        ],
+        "quotes": [
+          "Fix `.toLower()` → `Text.toLowercase()`",
+          "i keep getting \"Failed to generate workout\""
+        ]
+      },
+      "acceptanceCriteria": [
+        "The string `.toLower()` no longer appears in `buildShuffledSectionFromArray`",
+        "`Text.toLowercase(e.primaryMuscleGroup)` and `Text.toLowercase(group)` are used in the filter",
+        "Workout generation returns exercises for all muscle groups including Legs"
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "text": "In backend/main.mo, fix the invalid filter syntax in the `buildShuffledSectionFromArrayWithLimit` function by replacing `Text.equal(e.primaryMuscleGroup.toLower(), group.toLower())` with `Text.equal(Text.toLowercase(e.primaryMuscleGroup), Text.toLowercase(group))`.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1",
+          "msg-6"
+        ],
+        "quotes": [
+          "Fix `.toLower()` → `Text.toLowercase()`"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The string `.toLower()` no longer appears in `buildShuffledSectionFromArrayWithLimit`",
+        "`Text.toLowercase()` is used for both operands in the filter",
+        "Leg exercises are no longer silently filtered to empty arrays"
+      ]
+    },
+    {
+      "id": "REQ-18",
+      "text": "In backend/main.mo, in the `adjustRecoveryForTestMode` function, change `let fullyRecoveredTime = 0;` to `let fullyRecoveredTime = 0 - (100 * 3_600_000_000_000);` so that TEST_RECOVERY_MODE forces 100% recovery for all muscle groups.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1",
+          "msg-6"
+        ],
+        "quotes": [
+          "Fix `adjustRecoveryForTestMode` to use `fullyRecoveredTime = 0 - (100 * 3_600_000_000_000)`"
+        ]
+      },
+      "acceptanceCriteria": [
+        "`fullyRecoveredTime` is set to `0 - (100 * 3_600_000_000_000)` in `adjustRecoveryForTestMode`",
+        "When TEST_RECOVERY_MODE is true, all muscle groups report 100% recovery"
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "In backend/main.mo, ensure all imports use `mo:base/*` instead of `mo:core/*` (e.g., `mo:base/Text`, `mo:base/Array`, `mo:base/Int`, etc.) to ensure compatibility with the IC production environment and prevent build failures.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "`mo:core/*` imports instead of `mo:base/*`",
+          "Production IC canisters should use `mo:base/*`"
+        ]
+      },
+      "acceptanceCriteria": [
+        "No `mo:core/` import paths remain in backend/main.mo",
+        "All standard library imports use `mo:base/` prefix",
+        "Backend compiles without import-related errors"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify or delete the existing `exerciseLibrary` array or any other existing exercise arrays",
+    "Do not change any frontend files",
+    "Do not alter workout generation logic beyond the filter syntax and recovery fixes"
+  ],
+  "nonGoals": [
+    "Adding stable vars or preupgrade/postupgrade hooks in this build",
+    "Adding unifiedLegsLibrary or useUnifiedLegs toggle in this build",
+    "Any frontend UI changes"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

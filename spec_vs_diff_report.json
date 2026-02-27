@@ -1,0 +1,38 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-27T01:27:38.944Z",
+  "summary": "The diff shows backend/main.mo was modified, but the visible content still shows all imports using mo:core/* instead of mo:base/*. REQ-19 requires switching all imports to mo:base/. The newly added backend/migration.mo also uses mo:core/* imports. The function body changes for REQ-16, REQ-17, and REQ-18 are truncated and cannot be confirmed. A migration.mo file and migration actor syntax were added, which were explicitly listed as non-goals.",
+  "missing_requirements": [
+    {
+      "id": "REQ-19",
+      "requirement": "All imports in backend/main.mo must use mo:base/* instead of mo:core/*",
+      "reason": "The diff clearly shows backend/main.mo still uses mo:core/Map, mo:core/List, mo:core/Array, mo:core/Float, mo:core/Nat, mo:core/Iter, mo:core/Runtime, mo:core/Time, mo:core/Principal, mo:core/Text, mo:core/Debug — all are mo:core/ paths, not mo:base/",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Added backend/migration.mo file with mo:core imports and a migration module",
+      "reason": "The build request does not request adding a migration.mo file. The non-goals explicitly state 'Adding stable vars or preupgrade/postupgrade hooks in this build'. Furthermore, migration.mo itself uses mo:core/* imports which contradicts REQ-19.",
+      "evidence": [
+        "backend/migration.mo"
+      ]
+    },
+    {
+      "description": "backend/main.mo uses (with migration = Migration.run) actor syntax and imports the Migration module",
+      "reason": "Migration hooks and stable var migration infrastructure were explicitly listed as a non-goal for this build.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    }
+  ],
+  "confidence": 0.72,
+  "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "project_state.json"
+  ]
+}
